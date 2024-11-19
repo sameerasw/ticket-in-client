@@ -6,14 +6,14 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
-import { Ticket } from '../../types/Ticket';
+import { Event } from '../../types/Event';
 
 
 interface TicketCardProps {
-    ticket: Ticket;
+    event: Event;
   }
 
-const TicketCard: React.FC<TicketCardProps> = ({ ticket }) => {
+const TicketCard: React.FC<TicketCardProps> = ({ event }) => {
   return (
     <Card sx={{ 
         maxWidth: 345,
@@ -28,17 +28,16 @@ const TicketCard: React.FC<TicketCardProps> = ({ ticket }) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Lizard
+            {event.eventName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            By : {event.vendor.name}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Button size="small" color="primary">
-          Share
+          Book [${event.ticketPrice}]
         </Button>
       </CardActions>
     </Card>

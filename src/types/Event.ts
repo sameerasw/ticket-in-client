@@ -1,9 +1,12 @@
+import { TicketPool } from "./TicketPool";
+import { Vendor } from "./Vendor";
+
 export interface Event {
-    id: number;
+    eventId: number;
     eventName: string;
-    eventLocation: string;
-    eventDate: string;
-    eventTime: string;
     ticketPrice: number;
-    availableTickets: number;
-}
+    vendor: Vendor;
+    ticketPool: TicketPool;
+    name: string;
+    id: number;
+  }
