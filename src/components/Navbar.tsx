@@ -53,11 +53,13 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
+    border: '1px solid',
     backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
+    marginRight: theme.spacing(1),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(1),
@@ -92,31 +94,16 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
     },
   }));
 
-  function HideOnScroll(props: Props) {
-    const { children, window } = props;
-    // Note that you normally won't need to set the window ref as useScrollTrigger
-    // will default to window.
-    // This is only being set here because the demo is in an iframe.
-    const trigger = useScrollTrigger({
-      target: window ? window() : undefined,
-    });
-  
-    return (
-      <Slide appear={false} direction="down" in={!trigger}>
-        {children ?? <div />}
-      </Slide>
-    );
-  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <HideOnScroll {...props}>
       <AppBar sx={{
-        backdropFilter:"blur(20px)",
+        backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        backgroundColor: alpha(theme.palette.background.default, 0.72),
+        backgroundColor: alpha(theme.palette.background.paper, 0.6),
         color: theme.palette.text.primary,
-        }}>
+        boxShadow: 0,
+      }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -127,7 +114,7 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <ConfirmationNumberIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <ConfirmationNumberIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'primary.main' }} />
           <Typography
             variant="h6"
             noWrap
@@ -139,7 +126,7 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: 'primary.main',
               textDecoration: 'none',
               flexGrow: 1,
             }}
@@ -165,18 +152,19 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
               checkedIcon={<BedtimeRoundedIcon />}
               checked={isDarkMode}
               onChange={toggleTheme}
+              sx={{ backgroundColor: alpha(theme.palette.common.white, 0.15), marginRight: theme.spacing(1) }}
             />
           </div>
 
           {auth && (
             <div>
               <IconButton
-                size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+              sx={{ backgroundColor: alpha(theme.palette.common.white, 0.15) }}
               >
                 <AccountCircle />
               </IconButton>
@@ -202,7 +190,6 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
           )}
         </Toolbar>
       </AppBar>
-      </HideOnScroll>
     </Box>
   );
 }
