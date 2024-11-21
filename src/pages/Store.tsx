@@ -35,7 +35,7 @@ const Store = () => {
     <Paper>
       <Navbar onSearch={handleSearch} />
       <StyledPaper>
-        <Container sx={{ display: 'flex', flexWrap: 'wrap', marginTop: '3rem' }}>
+        <Container sx={{ display: 'flex', flexWrap: 'wrap', marginTop: '3rem', justifyContent: 'center'}}>
           {filteredEvents.map(event => (
             <TicketCard key={event.eventId} event={event} />
           ))}

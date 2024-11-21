@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import { Event } from '../../types/Event';
-
+import StyledCard from './style';
 
 interface TicketCardProps {
     event: Event;
@@ -15,10 +15,7 @@ interface TicketCardProps {
 
 const TicketCard: React.FC<TicketCardProps> = ({ event }) => {
   return (
-    <Card sx={{ 
-        maxWidth: 345,
-        margin: 2,
-         }}>
+    <StyledCard>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -36,24 +33,12 @@ const TicketCard: React.FC<TicketCardProps> = ({ event }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" variant="outlined">
           Book [${event.ticketPrice}]
         </Button>
       </CardActions>
-    </Card>
+    </StyledCard>
   );
 }
-
-
-
-// const TicketCard: React.FC<TicketCardProps> = ({ ticket }) => {
-//   return (
-//     <div>
-//       <h3>{ticket.id}</h3>
-//       <p>{ticket.ticketPrice}</p>
-//       <p>Price: ${ticket.ticketPrice}</p>
-//     </div>
-//   );
-// };
 
 export default TicketCard;
