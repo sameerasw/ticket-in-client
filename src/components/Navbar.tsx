@@ -111,7 +111,12 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <HideOnScroll {...props}>
-      <AppBar>
+      <AppBar sx={{
+        backdropFilter:"blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        backgroundColor: alpha(theme.palette.background.default, 0.72),
+        color: theme.palette.text.primary,
+        }}>
         <Toolbar>
           <IconButton
             size="large"

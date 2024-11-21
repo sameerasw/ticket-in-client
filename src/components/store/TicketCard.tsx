@@ -3,23 +3,23 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
-import CardActions from '@mui/material/CardActions';
 import { Event } from '../../types/Event';
-import StyledCard from './style';
+import { StyledCard } from './style';
 
 interface TicketCardProps {
-    event: Event;
-  }
+  event: Event;
+  onClick: () => void;
+}
 
-const TicketCard: React.FC<TicketCardProps> = ({ event }) => {
+
+const TicketCard: React.FC<TicketCardProps> = ({ event, onClick }) => {
   return (
-    <StyledCard>
+    <StyledCard onClick={onClick}>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
+          height="160"
           image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
           alt="green iguana"
         />
@@ -32,13 +32,8 @@ const TicketCard: React.FC<TicketCardProps> = ({ event }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary" variant="outlined">
-          Book [${event.ticketPrice}]
-        </Button>
-      </CardActions>
     </StyledCard>
   );
-}
+};
 
 export default TicketCard;

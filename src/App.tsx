@@ -1,13 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import AppRoutes from './routes/AppRoutes';
 import { ThemeContextProvider } from './components/ThemeContext';
 
 const App: React.FC = () => {
   return (
-    <ThemeContextProvider>
+      <ThemeContextProvider>
         <AppRoutes />
-    </ThemeContextProvider>
+      </ThemeContextProvider>
   );
 };
 

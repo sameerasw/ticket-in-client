@@ -42,6 +42,9 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
         palette: {
             mode: mode === 'system' ? getSystemTheme() : mode,
         },
+        shape: {
+            borderRadius: 16, // Set your desired border radius here
+        },
     });
 
     return (
