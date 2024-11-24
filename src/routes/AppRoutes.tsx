@@ -18,10 +18,13 @@ const PrivateRoute = ({ element, token }: PrivateRouteProps) => {
 
 const AppRoutes = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'));
+  const [userName, setUserName] = useState<string | null>(localStorage.getItem('userName'));
 
-  const handleLoginSuccess = (newToken: string) => {
+  const handleLoginSuccess = (newToken: string, name: string) => {
     setToken(newToken);
+    setUserName(name);
     localStorage.setItem('authToken', newToken); // Store token in local storage
+    localStorage.setItem('userName', name); // Store user name in local storage
   };
 
   return (

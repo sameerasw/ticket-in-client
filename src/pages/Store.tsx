@@ -15,6 +15,8 @@ const Store = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const userName = localStorage.getItem('userName');
+  const token = localStorage.getItem('authToken');
 
   useEffect(() => {
     const getTickets = async () => {
@@ -68,7 +70,13 @@ const Store = () => {
       }}>
       <Navbar onSearch={handleSearch} />
       <StyledPaper>
-        <Container sx={{ display: 'flex', flexWrap: 'wrap', marginTop: '3rem', justifyContent: 'center' }}>
+        <Container sx={{marginTop: '3rem',}}>
+        {token && (
+        <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
+          Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
+        </Typography>
+        )}
+        <Container sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
           {loading ? (
             <Box sx={{
               display: 'flex',
@@ -83,6 +91,7 @@ const Store = () => {
               <EventCard key={event.eventId} event={event} onClick={() => handleCardClick(event)} />
             ))
           )}
+        </Container>
         </Container>
       </StyledPaper>
       <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} />

@@ -24,6 +24,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { toggleTheme, theme } = useThemeContext();
   const token = localStorage.getItem('authToken');
+  const userName = localStorage.getItem('userName');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,6 +46,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken'); // Remove token from local storage
+    localStorage.removeItem('userName'); // Remove user name from local storage
     window.location.reload(); // Refresh page
   };
 
@@ -202,7 +204,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
               >
                 {token && (
                   <>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose}>{userName}</MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </>
                 )}
