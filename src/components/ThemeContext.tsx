@@ -58,7 +58,7 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
             },
             background: {
                 default: mode === 'dark' ? '#444444' : '#f5f5f5',
-                paper: mode === 'dark' ? '#000000' : '#fff',
+                paper: mode === 'dark' ? '#111111' : '#fff',
             },
             text: {
                 primary: mode === 'dark' ? '#fff' : '#000',

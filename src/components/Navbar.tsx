@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,30 +10,21 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import { alpha, Checkbox, InputBase, styled, useScrollTrigger } from '@mui/material';
+import { alpha, Checkbox, InputBase, styled } from '@mui/material';
 import Brightness5RoundedIcon from '@mui/icons-material/Brightness5Rounded';
 import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
 import { useThemeContext } from './ThemeContext';
 import SearchIcon from '@mui/icons-material/Search';
-import Slide from '@mui/material/Slide';
 
 interface NavbarProps {
   onSearch: (query: string) => void;
 }
 
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
-  children?: React.ReactElement<unknown>;
-}
-
-export default function Navbar({ onSearch }: NavbarProps, props: Props) {
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+export default function Navbar({ onSearch }: NavbarProps) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { toggleTheme, theme } = useThemeContext();
+  const token = localStorage.getItem('authToken');
+  const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,6 +40,21 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSearch(event.target.value);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Remove token from local storage
+    window.location.reload(); // Refresh page
+  };
+
+  const handleLoginClick = () => {
+    handleClose();
+    navigate('/login');
+  };
+
+  const handleRegisterClick = () => {
+    handleClose();
+    navigate('/register');
   };
 
   const Search = styled('div')(({ theme }) => ({
@@ -93,7 +100,6 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
       },
     },
   }));
-
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -156,38 +162,46 @@ export default function Navbar({ onSearch }: NavbarProps, props: Props) {
             />
           </div>
 
-          {auth && (
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
               sx={{ backgroundColor: alpha(theme.palette.common.white, 0.15) }}
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
-          )}
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              {token && (
+                <>
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </>
+              )}
+              {!token && (
+                <>
+                  <MenuItem onClick={handleLoginClick}>Login</MenuItem>
+                  <MenuItem onClick={handleRegisterClick}>Register</MenuItem>
+                </>
+              )}
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
     </Box>
