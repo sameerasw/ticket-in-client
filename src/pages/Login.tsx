@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { TextField, Button, Typography, Container, Box, Alert } from '@mui/material';
+import { TextField, Button, Typography, Container, Box, Alert, Paper } from '@mui/material';
+import Navbar from '../components/Navbar';
 
 interface LoginProps {
     onLoginSuccess: (token: string) => void;
@@ -25,10 +26,19 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     };
 
     return (
-        <Container maxWidth="xs">
-            <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Paper>
+            <Navbar onSearch={() => { }} />
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100vh',
+                maxWidth: '400px',
+                margin: 'auto',
+            }}>
                 <Typography component="h1" variant="h5">
-                    Login
+                    Login to Ticketin
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                     <TextField
@@ -64,9 +74,16 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                     >
                         Login
                     </Button>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={() => navigate('/register')}
+                    >
+                        Register
+                    </Button>
                 </Box>
             </Box>
-        </Container>
+        </Paper>
     );
 };
 

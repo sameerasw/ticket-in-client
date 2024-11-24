@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { TextField, Button, Typography, Container, Box, Alert } from '@mui/material';
+import { TextField, Button, Typography, Container, Box, Alert, Paper } from '@mui/material';
+import Navbar from '../components/Navbar';
 
 interface RegisterProps {
     onRegisterSuccess: () => void;
@@ -26,53 +27,75 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Box sx={{ mt: 4 }}>
-                <Typography variant="h4" component="h2" gutterBottom>
-                    Register
+        <Paper>
+            <Navbar onSearch={() => { }} />
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100vh',
+                maxWidth: '400px',
+                margin: 'auto',
+            }}>
+                <Typography component="h1" variant="h5">
+                    Register for Ticketin
                 </Typography>
-                <form onSubmit={handleSubmit}>
-                    <Box sx={{ mb: 2 }}>
-                        <TextField
-                            label="Name"
-                            variant="outlined"
-                            fullWidth
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                        <TextField
-                            label="Email"
-                            variant="outlined"
-                            fullWidth
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                        <TextField
-                            label="Password"
-                            variant="outlined"
-                            fullWidth
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </Box>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="name"
+                        label="Name"
+                        name="name"
+                        autoComplete="name"
+                        autoFocus
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                     {error && <Alert severity="error">{error}</Alert>}
-                    <Box sx={{ mt: 2 }}>
-                        <Button type="submit" variant="contained" color="primary" fullWidth>
-                            Register
-                        </Button>
-                    </Box>
-                </form>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Register
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={() => navigate('/login')}
+                    >
+                        Login
+                    </Button>
+                </Box>
             </Box>
-        </Container>
+        </Paper>
     );
 };
 

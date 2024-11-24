@@ -9,12 +9,7 @@ const App: React.FC = () => {
     <>
       <ThemeContextProvider>
         <CssBaseline />
-        <Container sx={{
-          width: '100%',
-          height: '100%',
-        }}>
           <AppRoutes />
-        </Container>
       </ThemeContextProvider>
     </>
   );

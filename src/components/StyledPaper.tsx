@@ -12,7 +12,7 @@ const StyledPaper: React.FC<StyledPaperProps> = ({ children }) => {
             minHeight: "fill-available",
             maxHeight: "content",
             width: "fill-available",
-            padding: "2rem",
+            paddingTop: "2rem",
              }}
              >
             {children}

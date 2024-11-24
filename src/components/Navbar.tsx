@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,7 +10,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import { alpha, Checkbox, InputBase, styled } from '@mui/material';
+import { alpha, Button, Checkbox, InputBase, styled } from '@mui/material';
 import Brightness5RoundedIcon from '@mui/icons-material/Brightness5Rounded';
 import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
 import { useThemeContext } from './ThemeContext';
@@ -25,6 +25,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const { toggleTheme, theme } = useThemeContext();
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -120,36 +121,46 @@ export default function Navbar({ onSearch }: NavbarProps) {
           >
             <MenuIcon />
           </IconButton>
-          <ConfirmationNumberIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'primary.main' }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'primary.main',
-              textDecoration: 'none',
-              flexGrow: 1,
-            }}
-          >
-            TICKETin
-          </Typography>
+          <Box onClick={() => navigate('/')} sx={{
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            flexGrow: 1,
+          }}>
+            <ConfirmationNumberIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'primary.main' }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'primary.main',
+                textDecoration: 'none',
+                flexGrow: 1,
+              }}
+            >
+              TICKETin
+            </Typography>
+          </Box>
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              onChange={handleSearchChange}
-            />
-          </Search>
+          {location.pathname === '/' && (
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                onChange={handleSearchChange}
+              />
+            </Search>
+          )}
 
           <div>
             <Checkbox
@@ -162,46 +173,48 @@ export default function Navbar({ onSearch }: NavbarProps) {
             />
           </div>
 
-          <div>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-              sx={{ backgroundColor: alpha(theme.palette.common.white, 0.15) }}
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              {token && (
-                <>
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </>
-              )}
-              {!token && (
-                <>
-                  <MenuItem onClick={handleLoginClick}>Login</MenuItem>
-                  <MenuItem onClick={handleRegisterClick}>Register</MenuItem>
-                </>
-              )}
-            </Menu>
-          </div>
+          {location.pathname !== '/login' && location.pathname !== '/register' && (
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+                sx={{ backgroundColor: alpha(theme.palette.common.white, 0.15) }}
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                {token && (
+                  <>
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </>
+                )}
+                {!token && (
+                  <>
+                    <MenuItem onClick={handleLoginClick}>Login</MenuItem>
+                    <MenuItem onClick={handleRegisterClick}>Register</MenuItem>
+                  </>
+                )}
+              </Menu>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

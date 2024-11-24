@@ -62,7 +62,10 @@ const Store = () => {
   });
 
   return (
-    <Paper>
+    <Paper sx={{
+      width: '100vw',
+      marginX: '0',
+      }}>
       <Navbar onSearch={handleSearch} />
       <StyledPaper>
         <Container sx={{ display: 'flex', flexWrap: 'wrap', marginTop: '3rem', justifyContent: 'center' }}>
