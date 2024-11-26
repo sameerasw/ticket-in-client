@@ -88,7 +88,7 @@ const Store = () => {
             </Box>
           ) : (
             filteredEvents.map(event => (
-              <EventCard key={event.eventId} event={event} onClick={() => handleCardClick(event)} />
+              <EventCard key={event.id} event={event} onClick={() => handleCardClick(event)} />
             ))
           )}
         </Container>

@@ -8,7 +8,7 @@ export const fetchEvents = async (): Promise<Event[]> => {
     const response = await axios.get(API_URL);
     return response.data;
   } catch (error) {
-    console.error('Error fetching tickets:', error);
+    console.error('Error fetching events:', error);
     throw error;
   }
 };

@@ -27,7 +27,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
         <CardMedia
           component="img"
           height="350"
-          image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+          image={event.image ?? 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'}
           alt="green iguana"
         />
         <CardContent sx={{
@@ -46,7 +46,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
             {event.eventName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            By : {event.vendor.name}
+            By : {event.vendorName}
           </Typography>
           <Typography variant="body2" sx={{
             color: 'text.secondary',

@@ -50,7 +50,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => 
                 color: theme.palette.text.primary,
             }}
         >
-            <Box component="img" src="https://mui.com/static/images/cards/contemplative-reptile.jpg" alt="green iguana" sx={{
+            <Box component="img" src={event.image ?? 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'} alt="green iguana" sx={{
                 height: '100%',
                 width: '100%',
                 objectFit: 'cover',
@@ -78,21 +78,21 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => 
                     justifyContent: 'space-around',
                 }}>
                     <DialogContentText>
-                        Vendor: {event.vendor.name}
+                        Vendor: {event.vendorName}
                     </DialogContentText>
                     <DialogContentText>
                         Ticket Price: ${event.ticketPrice}
                     </DialogContentText>
                     <DialogContentText>
-                        Available Tickets: {event.ticketPool.availableTickets}
+                        Available Tickets: {event.availableTickets}
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions sx={{ 
+                <DialogActions sx={{
                     padding: '1rem',
                     display: 'flex',
                     flexWrap: 'wrap',
                     gap: '0.5rem',
-                     }}>
+                }}>
                     <Button autoFocus onClick={onClose}>
                         Close
                     </Button>
