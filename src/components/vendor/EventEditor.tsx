@@ -75,18 +75,22 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
             };
             onSave(updatedEvent);
         } else {
-            const newEvent: Event = {
-                eventName,
-                eventLocation,
-                eventDate,
-                eventTime,
-                ticketPrice: parseFloat(ticketPrice),
-                details,
-                image,
-                vendorId: vendorId || 0,
-                vendorName: vendorName || '',
-            };
-            onSave(newEvent);
+            if (vendorId && vendorName) {
+                const newEvent: Event = {
+                    eventName,
+                    eventLocation,
+                    eventDate,
+                    eventTime,
+                    ticketPrice: parseFloat(ticketPrice),
+                    details,
+                    image,
+                    vendorId: vendorId,
+                    vendorName: vendorName,
+                };
+                onSave(newEvent);
+            } else {
+                console.error('Vendor ID or Name not found');
+            }
         }
     };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import StyledPaper from '../components/StyledPaper';
-import { fetchEvents } from '../services/eventApi';
+import { fetchEvents, createEvent } from '../services/eventApi';
 import { Box, Button, Card, Container, Typography } from '@mui/material';
 import EventCard from '../components/store/EventCard';
 import { Event } from '../types/Event';
@@ -48,10 +48,22 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
     setSelectedEvent(null);
   };
 
-  const handleSaveEvent = (event: Event) => {
-    // save or update event (WIP)
-    console.log('Event saved:', event);
-    handleDialogClose();
+  const handleSaveEvent = async (event: Event) => {
+    try {
+      if (event.id) {
+        // Update existing event (WIP)
+        console.log('Event updated:', event);
+      } else {
+        // Create new event
+        const newEvent = await createEvent(event);
+        setEvents([...events, newEvent]);
+        console.log('Event created:', newEvent);
+      }
+    } catch (error) {
+      console.error('Error saving event:', error);
+    } finally {
+      handleDialogClose();
+    }
   };
 
   return (
@@ -71,7 +83,7 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
                 Create Event
               </Button>
             </Box>
-            <Container sx={{ display: 'flex', flexDirection: 'rows', justifyContent: 'start', overflowX: 'auto', marginY: '1rem' }}>
+            <Container sx={{ display: 'flex', flexDirection: 'row', overflowX: 'scroll', marginY: '1rem' }}>
               {loading ? (
                 <Box sx={{
                   display: 'flex',
