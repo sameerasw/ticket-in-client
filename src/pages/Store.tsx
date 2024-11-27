@@ -80,7 +80,7 @@ const Store = () => {
           {loading ? (
             <Box sx={{
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               alignItems: 'center',
               height: '75vh',
             }}>

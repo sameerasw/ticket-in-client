@@ -1,5 +1,5 @@
 export interface Event {
-  id: number;
+  id?: number;
   eventName: string;
   eventLocation: string;
   eventDate: string;
@@ -9,5 +9,5 @@ export interface Event {
   image: string;
   vendorId: number;
   vendorName: string;
-  availableTickets: number;
+  availableTickets?: number;
 }

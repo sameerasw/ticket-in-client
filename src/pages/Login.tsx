@@ -5,13 +5,13 @@ import Navbar from '../components/Navbar';
 import { login } from '../services/sessionApi';
 
 interface LoginProps {
-  onLoginSuccess: (token: string, name: string) => void;
+  onLoginSuccess: (token: string, userId: number, name: string, email: string, userType: string) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('customers'); // Default to customer
+  const [userType, setUserType] = useState('CUSTOMER');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -19,8 +19,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     event.preventDefault();
     try {
       const data = await login(email, password, userType);
-      onLoginSuccess(data.token, data.name);
-      navigate('/vendor'); // Navigate to the store page
+      onLoginSuccess(data.token, data.userId, data.name, data.email, data.userType);
+      navigate('/');
     } catch (err) {
       setError('Invalid email or password');
     }
