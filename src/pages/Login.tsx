@@ -20,7 +20,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     try {
       const data = await login(email, password, userType);
       onLoginSuccess(data.token, data.userId, data.name, data.email, data.userType);
-      navigate('/');
+      if (data.userType === 'VENDOR') {
+        navigate('/vendor');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setError('Invalid email or password');
     }
