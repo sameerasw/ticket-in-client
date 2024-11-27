@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Typography, Box, Alert, Paper } from '@mui/material';
+import { TextField, Button, Typography, Box, Alert, Paper, FormControlLabel, Switch } from '@mui/material';
 import Navbar from '../components/Navbar';
 import { login } from '../services/sessionApi';
 
@@ -11,18 +11,23 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('customers'); // Default to customer
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const data = await login(email, password);
+      const data = await login(email, password, userType);
       onLoginSuccess(data.token, data.name);
-      navigate('/'); // Navigate to the store page
+      navigate('/vendor'); // Navigate to the store page
     } catch (err) {
       setError('Invalid email or password');
     }
+  };
+
+  const handleUserTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserType(event.target.checked ? 'VENDOR' : 'CUSTOMER');
   };
 
   return (
@@ -40,6 +45,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         <Typography component="h1" variant="h5">
           Login to Ticketin
         </Typography>
+        <FormControlLabel
+          control={<Switch checked={userType === 'VENDOR'} onChange={handleUserTypeChange} />}
+          label={userType === 'VENDOR' ? 'Login as Vendor' : 'Login as Customer'}
+          sx={{ mt: 2 }}
+        />
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"

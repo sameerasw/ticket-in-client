@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Typography, Box, Alert, Paper } from '@mui/material';
+import { TextField, Button, Typography, Box, Alert, Paper, FormControlLabel, Switch } from '@mui/material';
 import Navbar from '../components/Navbar';
 import { register } from '../services/sessionApi';
 
@@ -12,18 +12,23 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('customers');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await register(name, email, password);
+      await register(name, email, password, userType);
       onRegisterSuccess();
-      navigate('/login'); // Navigate to the login page
+      navigate('/login');
     } catch (err) {
       setError('Registration failed');
     }
+  };
+
+  const handleUserTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserType(event.target.checked ? 'vendors' : 'customers');
   };
 
   return (
@@ -41,6 +46,11 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         <Typography component="h1" variant="h5">
           Register for Ticketin
         </Typography>
+        <FormControlLabel
+          control={<Switch checked={userType === 'vendors'} onChange={handleUserTypeChange} />}
+          label={userType === 'vendors' ? 'Register as Vendor' : 'Register as Customer'}
+          sx={{ mt: 2 }}
+        />
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
