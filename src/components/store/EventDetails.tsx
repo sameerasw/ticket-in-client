@@ -43,14 +43,13 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => 
             onClose={onClose}
             aria-labelledby="responsive-dialog-title"
             sx={{
-
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(10px)",
                 backgroundColor: alpha(theme.palette.background.default, 0.3),
                 color: theme.palette.text.primary,
             }}
         >
-            <Box component="img" src={event.image ?? 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'} alt="green iguana" sx={{
+            <Box component="img" src={event.image ?? 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'} alt="event image" sx={{
                 height: '100%',
                 width: '100%',
                 objectFit: 'cover',
@@ -74,14 +73,28 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => 
                 </DialogTitle>
                 <DialogContent sx={{
                     display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-around',
+                    flexDirection: 'column',
                 }}>
                     <DialogContentText>
-                        Vendor: {event.vendorName}
+                        {event.details}
                     </DialogContentText>
+                    <Box sx={{
+                        display: 'flex',
+                        gap: '0.5rem',
+                    }}>
+                        <DialogContentText>
+                            {event.eventDate}
+                        </DialogContentText>
+                        <DialogContentText>
+                            {event.eventTime}
+                        </DialogContentText>
+                    </Box>
                     <DialogContentText>
-                        Ticket Price: ${event.ticketPrice}
+                        Location: {event.eventLocation}
+                    </DialogContentText>
+                    <br />
+                    <DialogContentText>
+                        By: {event.vendorName}
                     </DialogContentText>
                     <DialogContentText>
                         Available Tickets: {event.availableTickets}
@@ -100,7 +113,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => 
                         Watchlist
                     </Button>
                     <Button variant="contained" endIcon={<ConfirmationNumberRoundedIcon />}>
-                        Buy Ticket
+                        Buy Ticket ${event.ticketPrice}
                     </Button>
                 </DialogActions>
             </Box>
