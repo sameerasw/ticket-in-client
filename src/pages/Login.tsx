@@ -95,6 +95,13 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           >
             Register
           </Button>
+
+        </Box>
+        {/* warning on demo website */}
+        <Box sx={{ mt: 4, backgroundColor: 'background.paper', p: 2, borderRadius: 1 }}>
+          <Typography variant="caption" sx={{ color: 'error.main' }}>
+            Warning: This is a demo website. Do not use real email, password, or any sensitive information.
+          </Typography>
         </Box>
       </Box>
     </Paper>

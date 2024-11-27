@@ -67,31 +67,31 @@ const Store = () => {
     <Paper sx={{
       width: '100vw',
       marginX: '0',
-      }}>
+    }}>
       <Navbar onSearch={handleSearch} />
       <StyledPaper>
-        <Container sx={{marginTop: '3rem',}}>
-        {token && (
-        <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
-          Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
-        </Typography>
-        )}
-        <Container sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
-          {loading ? (
-            <Box sx={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              height: '75vh',
-            }}>
-              <SpinningIcon sx={{ color: 'primary.main', fontSize: 100 }} />
-            </Box>
-          ) : (
-            filteredEvents.map(event => (
-              <EventCard key={event.id} event={event} onClick={() => handleCardClick(event)} />
-            ))
+        <Container sx={{ marginTop: '3rem', width: '100%' }}>
+          {token && (
+            <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
+              Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
+            </Typography>
           )}
-        </Container>
+          <Container sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '95vw' }}>
+            {loading ? (
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                height: '75vh',
+              }}>
+                <SpinningIcon sx={{ color: 'primary.main', fontSize: 100 }} />
+              </Box>
+            ) : (
+              filteredEvents.map(event => (
+                <EventCard key={event.id} event={event} onClick={() => handleCardClick(event)} />
+              ))
+            )}
+          </Container>
         </Container>
       </StyledPaper>
       <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} />
