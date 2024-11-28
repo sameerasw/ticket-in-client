@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { Event } from '../types/Event';
+import config from '../config';
 
-const API_URL = 'http://192.168.100.53:8081/events';
+const API_URL = `${config.API_BASE_URL}/events`;
 
 export const fetchEvents = async (): Promise<Event[]> => {
   try {
