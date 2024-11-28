@@ -17,21 +17,22 @@ const Store = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const userName = localStorage.getItem('userName');
   const token = localStorage.getItem('authToken');
+  const customerId = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
 
   useEffect(() => {
-    const getTickets = async () => {
-      try {
-        const data = await fetchEvents();
-        setEvents(data);
-      } catch (error) {
-        console.error('Error fetching tickets:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getTickets();
   }, []);
+
+  const getTickets = async () => {
+    try {
+      const data = await fetchEvents();
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -45,6 +46,7 @@ const Store = () => {
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedEvent(null);
+    getTickets();
   };
 
   const filteredEvents = events.filter(event =>
@@ -95,7 +97,7 @@ const Store = () => {
           </Container>
         </Container>
       </StyledPaper>
-      <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} isSignedIn={!!token} />
+      <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} isSignedIn={!!token} customerId={customerId} />
     </Paper>
   );
 };
