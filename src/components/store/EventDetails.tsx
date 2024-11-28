@@ -17,6 +17,7 @@ interface EventDetailsProps {
     open: boolean;
     onClose: () => void;
     event: Event | null;
+    isSignedIn: boolean; // Add this prop
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -28,11 +29,15 @@ const Transition = React.forwardRef(function Transition(
     return <Grow ref={ref} {...props} />;
 });
 
-const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => {
+const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSignedIn }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     if (!event) return null;
+
+    function buyTicket(event: React.MouseEvent<HTMLButtonElement>): void {
+        throw new Error('Function not implemented.');
+    }
 
     return (
         <Dialog
@@ -109,12 +114,20 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event }) => 
                     <Button autoFocus onClick={onClose}>
                         Close
                     </Button>
-                    <Button variant="outlined" endIcon={<BookmarkAddRoundedIcon />}>
-                        Watchlist
-                    </Button>
-                    <Button variant="contained" endIcon={<ConfirmationNumberRoundedIcon />}>
-                        Buy Ticket ${event.ticketPrice}
-                    </Button>
+                    {isSignedIn ? (
+                        <>
+                            <Button variant="outlined" endIcon={<BookmarkAddRoundedIcon />}>
+                                Watchlist
+                            </Button>
+                            <Button variant="contained" endIcon={<ConfirmationNumberRoundedIcon />} onClick={buyTicket}>
+                                Buy Ticket ${event.ticketPrice}
+                            </Button>
+                        </>
+                    ) : (
+                        <Button variant="contained" endIcon={<ConfirmationNumberRoundedIcon />} onClick={ () => window.location.href = '/login' }>
+                            Login to Buy Ticket
+                        </Button>
+                    )}
                 </DialogActions>
             </Box>
         </Dialog>

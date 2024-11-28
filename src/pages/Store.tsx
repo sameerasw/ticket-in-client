@@ -66,6 +66,7 @@ const Store = () => {
   return (
     <Paper sx={{
       width: '100vw',
+      height: '100vh',
       marginX: '0',
     }}>
       <Navbar onSearch={handleSearch} />
@@ -94,7 +95,7 @@ const Store = () => {
           </Container>
         </Container>
       </StyledPaper>
-      <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} />
+      <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} isSignedIn={!!token} />
     </Paper>
   );
 };
