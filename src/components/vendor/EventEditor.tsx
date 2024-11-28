@@ -9,7 +9,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Event } from '../../types/Event';
 import { TransitionProps } from '@mui/material/transitions';
-import { alpha, Grow, TextField } from '@mui/material';
+import { alpha, Grow, TextField, Box, Typography } from '@mui/material';
+import { releaseTickets } from '../../services/vendorApi';
 
 interface EventEditorProps {
     open: boolean;
@@ -18,6 +19,7 @@ interface EventEditorProps {
     onSave: (event: Event) => void;
     vendorId: number | null;
     vendorName: string | null;
+    fetchVendorEvents: () => void; // Add this prop
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -29,7 +31,7 @@ const Transition = React.forwardRef(function Transition(
     return <Grow ref={ref} {...props} />;
 });
 
-const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave, vendorId, vendorName }) => {
+const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave, vendorId, vendorName, fetchVendorEvents }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -40,6 +42,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
     const [ticketPrice, setTicketPrice] = useState('');
     const [details, setDetails] = useState('');
     const [image, setImage] = useState('');
+    const [ticketCount, setTicketCount] = useState<number>(1);
 
     useEffect(() => {
         if (event) {
@@ -90,6 +93,19 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                 onSave(newEvent);
             } else {
                 console.error('Vendor ID or Name not found');
+            }
+        }
+    };
+
+    const handleReleaseTickets = async () => {
+        if (event && ticketCount > 0 && event.id) {
+            try {
+                const response = await releaseTickets(event.id, ticketCount);
+                setTicketCount(1);
+                console.log(response);
+                fetchVendorEvents(); // Re-fetch events after releasing tickets
+            } catch (error) {
+                console.error('Error releasing tickets:', error);
             }
         }
     };
@@ -193,6 +209,36 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
                 />
+                {event && (
+                    <Box sx={{ marginTop: 2 }}>
+                        <Typography variant="h6">Release New Tickets</Typography>
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'rows',
+                            gap: '0.5rem',
+                            alignItems: 'center',
+                        }}>
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                id="ticketCount"
+                                label="Number of Tickets"
+                                name="ticketCount"
+                                type="number"
+                                value={ticketCount}
+                                onChange={(e) => setTicketCount(parseInt(e.target.value))}
+                            />
+                            <Typography variant="body2" color="textSecondary" sx={{
+                                marginLeft: '1rem',
+                            }}>
+                                Available: {event.availableTickets}
+                            </Typography>
+                        </Box>
+                        <Button variant="contained" onClick={handleReleaseTickets}>
+                            Release Tickets
+                        </Button>
+                    </Box>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>

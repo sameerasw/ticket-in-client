@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import StyledPaper from '../components/StyledPaper';
-import { fetchEvents, createEvent } from '../services/eventApi';
+import { fetchEventsByVendor, createEvent } from '../services/eventApi';
 import { Box, Button, Card, Container, Typography } from '@mui/material';
 import EventCard from '../components/store/EventCard';
 import { Event } from '../types/Event';
@@ -18,19 +18,19 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getTickets = async () => {
-      try {
-        const data = await fetchEvents();
-        setEvents(data);
-      } catch (error) {
-        console.error('Error fetching tickets:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchVendorEvents = async () => {
+    try {
+      const data = await fetchEventsByVendor(userId!);
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    getTickets();
+  useEffect(() => {
+    fetchVendorEvents();
   }, []);
 
   const handleCardClick = (event: Event) => {
@@ -56,9 +56,9 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
       } else {
         // Create new event
         const newEvent = await createEvent(event);
-        setEvents([...events, newEvent]);
         console.log('Event created:', newEvent);
       }
+      await fetchVendorEvents(); // Re-fetch events after saving
     } catch (error) {
       console.error('Error saving event:', error);
     } finally {
@@ -102,7 +102,15 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
           </Card>
         </Container>
       </StyledPaper>
-      <EventEditor open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} onSave={handleSaveEvent} vendorId={userId} vendorName={userName} />
+      <EventEditor 
+        open={dialogOpen} 
+        onClose={handleDialogClose} 
+        event={selectedEvent} 
+        onSave={handleSaveEvent} 
+        vendorId={userId} 
+        vendorName={userName} 
+        fetchVendorEvents={fetchVendorEvents} // Pass the fetch function as a prop
+      />
     </>
   );
 }
