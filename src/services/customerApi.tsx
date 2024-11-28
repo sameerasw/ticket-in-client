@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-const API_URL = 'http://192.168.100.53:8081/customers';
+const API_URL = `${config.API_BASE_URL}/customers`;
 
 export const purchaseTicket = async (customerId: number, eventItemId: number): Promise<string> => {
   try {
