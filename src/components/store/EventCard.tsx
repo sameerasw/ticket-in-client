@@ -46,7 +46,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
             {event.eventName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            By : {event.vendorName}
+            {event.eventDate} @ {event.eventTime}
           </Typography>
           <Typography variant="body2" sx={{
             color: 'text.secondary',

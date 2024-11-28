@@ -5,13 +5,13 @@ import Navbar from '../components/Navbar';
 import { login } from '../services/sessionApi';
 
 interface LoginProps {
-  onLoginSuccess: (token: string, name: string) => void;
+  onLoginSuccess: (token: string, userId: number, name: string, email: string, userType: string) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('customers'); // Default to customer
+  const [userType, setUserType] = useState('CUSTOMER');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -19,8 +19,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     event.preventDefault();
     try {
       const data = await login(email, password, userType);
-      onLoginSuccess(data.token, data.name);
-      navigate('/vendor'); // Navigate to the store page
+      onLoginSuccess(data.token, data.userId, data.name, data.email, data.userType);
+      if (data.userType === 'VENDOR') {
+        navigate('/vendor');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setError('Invalid email or password');
     }
@@ -91,6 +95,13 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           >
             Register
           </Button>
+
+        </Box>
+        {/* warning on demo website */}
+        <Box sx={{ mt: 4, backgroundColor: 'background.paper', p: 2, borderRadius: 1 }}>
+          <Typography variant="caption" sx={{ color: 'error.main' }}>
+            Warning: This is a demo website. Do not use real email, password, or any sensitive information.
+          </Typography>
         </Box>
       </Box>
     </Paper>

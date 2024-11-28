@@ -202,18 +202,14 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {token && (
-                  <>
-                    <MenuItem onClick={handleClose}>{userName}</MenuItem>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                  </>
-                )}
-                {!token && (
-                  <>
-                    <MenuItem onClick={handleLoginClick}>Login</MenuItem>
-                    <MenuItem onClick={handleRegisterClick}>Register</MenuItem>
-                  </>
-                )}
+                {token && [
+                    <MenuItem key="username" onClick={handleClose}>{userName}</MenuItem>,
+                    <MenuItem key="logout" onClick={handleLogout}>Logout</MenuItem>
+                ]}
+                {!token && [
+                    <MenuItem key="login" onClick={handleLoginClick}>Login</MenuItem>,
+                    <MenuItem key="register" onClick={handleRegisterClick}>Register</MenuItem>
+                ]}
               </Menu>
             </div>
           )}

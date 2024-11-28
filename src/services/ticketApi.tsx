@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Ticket } from '../types/Ticket';
 
-const API_URL = 'http://localhost:8081/tickets/list';
+const API_URL = 'http://192.168.100.53:8081/tickets/list';
 
 export const fetchTickets = async (): Promise<Ticket[]> => {
   try {
