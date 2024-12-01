@@ -21,6 +21,7 @@ interface EventDetailsProps {
     event: Event | null;
     isSignedIn: boolean;
     customerId: number | null;
+    loading: boolean; // Add this prop
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -32,15 +33,15 @@ const Transition = React.forwardRef(function Transition(
     return <Grow ref={ref} {...props} />;
 });
 
-const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSignedIn, customerId }) => {
+const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSignedIn, customerId, loading }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [purchaseSuccess, setPurchaseSuccess] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [purchaseLoading, setPurchaseLoading] = useState<boolean>(false);
 
     const buyTicket = async () => {
         if (customerId && event?.id) {
-            setLoading(true);
+            setPurchaseLoading(true);
             try {
                 const response = await purchaseTicket(customerId, event.id);
                 console.log(response);
@@ -48,7 +49,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
             } catch (error) {
                 console.error('Error purchasing ticket:', error);
             } finally {
-                setLoading(false);
+                setPurchaseLoading(false);
             }
         }
     };
@@ -90,6 +91,17 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                             Close
                         </Button>
                     </DialogActions>
+                </Box>
+            ) : loading ? (
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    padding: '2rem',
+                }}>
+                    <CircularProgress />
                 </Box>
             ) : (
                 <>
@@ -162,9 +174,9 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                                         variant="contained" 
                                         endIcon={<ConfirmationNumberRoundedIcon />} 
                                         onClick={buyTicket} 
-                                        disabled={event?.availableTickets === 0 || loading}
+                                        disabled={event?.availableTickets === 0 || purchaseLoading}
                                     >
-                                        {loading ? <CircularProgress size={24} /> : (event?.availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
+                                        {purchaseLoading ? <CircularProgress size={24} /> : (event?.availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
                                     </Button>
                                 </>
                             ) : (

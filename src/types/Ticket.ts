@@ -5,6 +5,7 @@ export interface Ticket {
 }
 
 export interface TicketDTO {
+  eventId: any;
   eventName: string;
   ticketId: string;
   imageUrl: string;
