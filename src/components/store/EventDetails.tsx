@@ -174,6 +174,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                                         variant="contained" 
                                         endIcon={<ConfirmationNumberRoundedIcon />} 
                                         onClick={buyTicket} 
+                                        disabled={event?.availableTickets === 0 || purchaseLoading}
                                     >
                                         {purchaseLoading ? <CircularProgress size={24} /> :(event?.availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
                                     </Button>
