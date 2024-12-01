@@ -19,7 +19,7 @@ interface EventEditorProps {
     onSave: (event: Event) => void;
     vendorId: number | null;
     vendorName: string | null;
-    fetchVendorEvents: () => void; // Add this prop
+    fetchVendorEvents: () => void;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -44,6 +44,16 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
     const [image, setImage] = useState('');
     const [ticketCount, setTicketCount] = useState<number>(1);
 
+    const [errors, setErrors] = useState({
+        eventName: '',
+        eventLocation: '',
+        eventDate: '',
+        eventTime: '',
+        ticketPrice: '',
+        details: '',
+        image: '',
+    });
+
     useEffect(() => {
         if (event) {
             setEventName(event.eventName);
@@ -64,22 +74,24 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
         }
     }, [event, open]);
 
+    const validate = () => {
+        let tempErrors = { ...errors };
+        tempErrors.eventName = eventName.length > 500 ? 'Event Name cannot exceed 500 characters' : '';
+        tempErrors.eventLocation = eventLocation.length > 500 ? 'Event Location cannot exceed 500 characters' : '';
+        tempErrors.eventDate = eventDate ? '' : 'Event Date is required';
+        tempErrors.eventTime = eventTime ? '' : 'Event Time is required';
+        tempErrors.ticketPrice = ticketPrice && parseFloat(ticketPrice) > 0 ? '' : 'Ticket Price must be a positive number';
+        tempErrors.details = details.length > 2000 ? 'Details cannot exceed 2000 characters' : '';
+        tempErrors.image = image.length > 1000 ? 'Image URL cannot exceed 1000 characters' : '';
+        setErrors(tempErrors);
+        return Object.values(tempErrors).every(x => x === '');
+    };
+
     const handleSave = () => {
-        if (event) {
-            const updatedEvent: Event = {
-                ...event,
-                eventName,
-                eventLocation,
-                eventDate,
-                eventTime,
-                ticketPrice: parseFloat(ticketPrice),
-                details,
-                image,
-            };
-            onSave(updatedEvent);
-        } else {
-            if (vendorId && vendorName) {
-                const newEvent: Event = {
+        if (validate()) {
+            if (event) {
+                const updatedEvent: Event = {
+                    ...event,
                     eventName,
                     eventLocation,
                     eventDate,
@@ -87,12 +99,25 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     ticketPrice: parseFloat(ticketPrice),
                     details,
                     image,
-                    vendorId: vendorId,
-                    vendorName: vendorName,
                 };
-                onSave(newEvent);
+                onSave(updatedEvent);
             } else {
-                console.error('Vendor ID or Name not found');
+                if (vendorId && vendorName) {
+                    const newEvent: Event = {
+                        eventName,
+                        eventLocation,
+                        eventDate,
+                        eventTime,
+                        ticketPrice: parseFloat(ticketPrice),
+                        details,
+                        image,
+                        vendorId: vendorId,
+                        vendorName: vendorName,
+                    };
+                    onSave(newEvent);
+                } else {
+                    console.error('Vendor ID or Name not found');
+                }
             }
         }
     };
@@ -103,7 +128,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                 const response = await releaseTickets(event.id, ticketCount);
                 setTicketCount(1);
                 console.log(response);
-                fetchVendorEvents(); // Re-fetch events after releasing tickets
+                fetchVendorEvents();
             } catch (error) {
                 console.error('Error releasing tickets:', error);
             }
@@ -140,6 +165,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     autoFocus
                     value={eventName}
                     onChange={(e) => setEventName(e.target.value)}
+                    error={!!errors.eventName}
+                    helperText={errors.eventName}
                 />
                 <TextField
                     margin="normal"
@@ -151,6 +178,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     autoComplete="eventLocation"
                     value={eventLocation}
                     onChange={(e) => setEventLocation(e.target.value)}
+                    error={!!errors.eventLocation}
+                    helperText={errors.eventLocation}
                 />
                 <TextField
                     margin="normal"
@@ -163,6 +192,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     InputLabelProps={{ shrink: true }}
                     value={eventDate}
                     onChange={(e) => setEventDate(e.target.value)}
+                    error={!!errors.eventDate}
+                    helperText={errors.eventDate}
                 />
                 <TextField
                     margin="normal"
@@ -175,6 +206,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     InputLabelProps={{ shrink: true }}
                     value={eventTime}
                     onChange={(e) => setEventTime(e.target.value)}
+                    error={!!errors.eventTime}
+                    helperText={errors.eventTime}
                 />
                 <TextField
                     margin="normal"
@@ -186,6 +219,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     type="number"
                     value={ticketPrice}
                     onChange={(e) => setTicketPrice(e.target.value)}
+                    error={!!errors.ticketPrice}
+                    helperText={errors.ticketPrice}
                 />
                 <TextField
                     margin="normal"
@@ -198,6 +233,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     rows={4}
                     value={details}
                     onChange={(e) => setDetails(e.target.value)}
+                    error={!!errors.details}
+                    helperText={errors.details}
                 />
                 <TextField
                     margin="normal"
@@ -208,6 +245,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                     name="image"
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
+                    error={!!errors.image}
+                    helperText={errors.image}
                 />
                 {event && (
                     <Box sx={{ marginTop: 2 }}>
