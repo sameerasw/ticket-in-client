@@ -22,8 +22,12 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       await register(name, email, password, userType);
       onRegisterSuccess();
       navigate('/login');
-    } catch (err) {
-      setError('Registration failed');
+    } catch (err: any) {
+      if (err.response && err.response.status === 409) {
+        setError('Email already exists');
+      } else {
+        setError('Registration failed');
+      }
     }
   };
 
@@ -105,7 +109,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
           </Button>
         </Box>
         {/* warning on demo website */}
-        <Box sx={{ mt: 4, backgroundColor: 'background.paper', p: 2, borderRadius: 1 }}>
+        <Box sx={{ mt: 4, backgroundColor: 'background.default', p: 2, borderRadius: 1 }}>
           <Typography variant="caption" sx={{ color: 'error.main' }}>
             Warning: This is a demo website. Do not use real email, password, or any sensitive information.
           </Typography>
