@@ -21,7 +21,7 @@ interface EventDetailsProps {
     event: Event | null;
     isSignedIn: boolean;
     customerId: number | null;
-    loading: boolean; // Add this prop
+    loading: boolean;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -174,9 +174,8 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                                         variant="contained" 
                                         endIcon={<ConfirmationNumberRoundedIcon />} 
                                         onClick={buyTicket} 
-                                        disabled={event?.availableTickets === 0 || purchaseLoading}
                                     >
-                                        {purchaseLoading ? <CircularProgress size={24} /> : (event?.availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
+                                        {purchaseLoading ? <CircularProgress size={24} /> :(event?.availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
                                     </Button>
                                 </>
                             ) : (

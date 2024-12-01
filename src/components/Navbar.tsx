@@ -53,10 +53,10 @@ export default function Navbar({ onSearch }: NavbarProps) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // Remove token from local storage
-    localStorage.removeItem('userName'); // Remove user name from local storage
-    localStorage.removeItem('userType'); // Remove user type from local storage
-    window.location.reload(); // Refresh page
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userType');
+    window.location.reload();
   };
 
   const handleLoginClick = () => {
@@ -101,7 +101,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
     width: '100%',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(3)})`,
       transition: theme.transitions.create('width'),
       height: '1em',
