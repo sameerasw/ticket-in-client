@@ -9,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Event } from '../../types/Event';
 import { TransitionProps } from '@mui/material/transitions';
-import { alpha, Grow, TextField, Box, Typography } from '@mui/material';
+import { alpha, Grow, TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { releaseTickets } from '../../services/vendorApi';
 
 interface EventEditorProps {
@@ -43,6 +43,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
     const [details, setDetails] = useState('');
     const [image, setImage] = useState('');
     const [ticketCount, setTicketCount] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [errors, setErrors] = useState({
         eventName: '',
@@ -87,23 +88,13 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
         return Object.values(tempErrors).every(x => x === '');
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (validate()) {
-            if (event) {
-                const updatedEvent: Event = {
-                    ...event,
-                    eventName,
-                    eventLocation,
-                    eventDate,
-                    eventTime,
-                    ticketPrice: parseFloat(ticketPrice),
-                    details,
-                    image,
-                };
-                onSave(updatedEvent);
-            } else {
-                if (vendorId && vendorName) {
-                    const newEvent: Event = {
+            setLoading(true);
+            try {
+                if (event) {
+                    const updatedEvent: Event = {
+                        ...event,
                         eventName,
                         eventLocation,
                         eventDate,
@@ -111,19 +102,37 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                         ticketPrice: parseFloat(ticketPrice),
                         details,
                         image,
-                        vendorId: vendorId,
-                        vendorName: vendorName,
                     };
-                    onSave(newEvent);
+                    await onSave(updatedEvent);
                 } else {
-                    console.error('Vendor ID or Name not found');
+                    if (vendorId && vendorName) {
+                        const newEvent: Event = {
+                            eventName,
+                            eventLocation,
+                            eventDate,
+                            eventTime,
+                            ticketPrice: parseFloat(ticketPrice),
+                            details,
+                            image,
+                            vendorId: vendorId,
+                            vendorName: vendorName,
+                        };
+                        await onSave(newEvent);
+                    } else {
+                        console.error('Vendor ID or Name not found');
+                    }
                 }
+            } catch (error) {
+                console.error('Error saving event:', error);
+            } finally {
+                setLoading(false);
             }
         }
     };
 
     const handleReleaseTickets = async () => {
         if (event && ticketCount > 0 && event.id) {
+            setLoading(true);
             try {
                 const response = await releaseTickets(event.id, ticketCount);
                 setTicketCount(1);
@@ -131,6 +140,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                 fetchVendorEvents();
             } catch (error) {
                 console.error('Error releasing tickets:', error);
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -273,18 +284,18 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, onSave,
                                 Available: {event.availableTickets}
                             </Typography>
                         </Box>
-                        <Button variant="contained" onClick={handleReleaseTickets}>
-                            Release Tickets
+                        <Button variant="contained" onClick={handleReleaseTickets} disabled={loading}>
+                            {loading ? <CircularProgress size={24} /> : 'Release Tickets'}
                         </Button>
                     </Box>
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>
+                <Button onClick={onClose} disabled={loading}>
                     Cancel
                 </Button>
-                <Button onClick={handleSave} variant="contained">
-                    Save
+                <Button onClick={handleSave} variant="contained" disabled={loading}>
+                    {loading ? <CircularProgress size={24} /> : 'Save'}
                 </Button>
             </DialogActions>
         </Dialog>

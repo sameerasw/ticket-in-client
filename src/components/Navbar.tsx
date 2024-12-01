@@ -25,6 +25,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const { toggleTheme, theme } = useThemeContext();
   const token = localStorage.getItem('authToken');
   const userName = localStorage.getItem('userName');
+  const userType = localStorage.getItem('userType');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,6 +39,13 @@ export default function Navbar({ onSearch }: NavbarProps) {
     setAnchorEl(null);
   };
 
+  const handleProfileClick = () => {
+    handleClose();
+    if (userType === 'CUSTOMER') {
+      navigate('/profile');
+    }
+  };
+
   const isDarkMode = theme.palette.mode === 'dark';
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +55,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const handleLogout = () => {
     localStorage.removeItem('authToken'); // Remove token from local storage
     localStorage.removeItem('userName'); // Remove user name from local storage
+    localStorage.removeItem('userType'); // Remove user type from local storage
     window.location.reload(); // Refresh page
   };
 
@@ -78,7 +87,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
   }));
 
   const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(1),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -93,12 +102,13 @@ export default function Navbar({ onSearch }: NavbarProps) {
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      paddingLeft: `calc(1em + ${theme.spacing(3)})`,
       transition: theme.transitions.create('width'),
+      height: '1em',
       [theme.breakpoints.up('sm')]: {
         width: '12ch',
         '&:focus': {
-          width: '20ch',
+          width: '25ch',
         },
       },
     },
@@ -114,15 +124,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
         boxShadow: 0,
       }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Box onClick={() => navigate('/')} sx={{
             display: 'flex',
             alignItems: 'center',
@@ -203,7 +204,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 onClose={handleClose}
               >
                 {token && [
-                    <MenuItem key="username" onClick={handleClose}>{userName}</MenuItem>,
+                    <MenuItem key="username" onClick={handleProfileClick}>{userName}</MenuItem>,
                     <MenuItem key="logout" onClick={handleLogout}>Logout</MenuItem>
                 ]}
                 {!token && [

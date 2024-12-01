@@ -45,7 +45,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Store />} />
         <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route path="/register" element={<Register onRegisterSuccess={() => {}} />} />
-        <Route path="/profile" element={<PrivateRoute token={token} element={<CustomerProfile />} />} />
+        <Route path="/profile" element={<PrivateRoute token={token} element={<CustomerProfile userId={userId} userName={name} />} />} />
         <Route path="/vendor" element={<PrivateRoute token={token} element={<VendorAccount userId={userId} userName={name} />} />} />
       </Routes>
     </BrowserRouter>

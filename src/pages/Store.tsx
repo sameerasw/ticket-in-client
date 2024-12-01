@@ -73,7 +73,7 @@ const Store = () => {
     }}>
       <Navbar onSearch={handleSearch} />
       <StyledPaper>
-        <Container sx={{ marginTop: '3rem', width: '100%' }}>
+        <Container sx={{ paddingTop: '5rem', width: '100%' }}>
           {token && (
             <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
               Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
