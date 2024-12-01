@@ -1,4 +1,4 @@
-import { Container, Typography, Box, List, ListItemText, CircularProgress, ListItemAvatar, Avatar, Card, ListItemButton } from '@mui/material';
+import { Container, Typography, Box, List, CircularProgress, Card } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import StyledPaper from '../components/StyledPaper';
@@ -7,6 +7,7 @@ import { getEventById } from '../services/eventApi';
 import { TicketDTO } from '../types/Ticket';
 import EventDetails from '../components/store/EventDetails';
 import { Event } from '../types/Event';
+import TicketListItem from '../components/customer/TicketListItem';
 
 interface CustomerProfileProps {
   userId: number | null;
@@ -75,15 +76,7 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({ userId, userName }) =
               <List>
                 {tickets.length > 0 ? (
                   tickets.map((ticket, index) => (
-                    <ListItemButton key={index} onClick={() => handleTicketClick(ticket.eventId)}>
-                      <ListItemAvatar>
-                        <Avatar src={ticket.imageUrl} alt={ticket.eventName} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={ticket.eventName}
-                        secondary={`Date: ${ticket.dateTime} | Ticket ID: ${ticket.ticketId}`}
-                      />
-                    </ListItemButton>
+                    <TicketListItem key={index} ticket={ticket} onClick={handleTicketClick} />
                   ))
                 ) : (
                   <Typography variant="body1" sx={{ textAlign: 'center' }}>
