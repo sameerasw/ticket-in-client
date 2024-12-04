@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import { alpha, Button, Checkbox, InputBase, styled } from '@mui/material';
+import { alpha, Checkbox, InputBase, styled } from '@mui/material';
 import Brightness5RoundedIcon from '@mui/icons-material/Brightness5Rounded';
 import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
 import { useThemeContext } from './ThemeContext';
@@ -22,6 +21,7 @@ interface NavbarProps {
 
 export default function Navbar({ onSearch }: NavbarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const { toggleTheme, theme } = useThemeContext();
   const token = localStorage.getItem('authToken');
   const userName = localStorage.getItem('userName');
@@ -49,7 +49,13 @@ export default function Navbar({ onSearch }: NavbarProps) {
   const isDarkMode = theme.palette.mode === 'dark';
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onSearch(event.target.value);
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onSearch(searchQuery);
+    }
   };
 
   const handleLogout = () => {
@@ -69,7 +75,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
     navigate('/register');
   };
 
-  const Search = styled('div')(({ theme }) => ({
+  const Search = useCallback(styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     border: '1px solid',
@@ -84,9 +90,9 @@ export default function Navbar({ onSearch }: NavbarProps) {
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
-  }));
+  })), []);
 
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
+  const SearchIconWrapper = useCallback(styled('div')(({ theme }) => ({
     padding: theme.spacing(1),
     height: '100%',
     position: 'absolute',
@@ -94,9 +100,9 @@ export default function Navbar({ onSearch }: NavbarProps) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }));
+  })), []);
 
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  const StyledInputBase = useCallback(styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     width: '100%',
     '& .MuiInputBase-input': {
@@ -111,7 +117,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
         },
       },
     },
-  }));
+  })), []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -159,7 +165,9 @@ export default function Navbar({ onSearch }: NavbarProps) {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
+                value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
               />
             </Search>
           )}

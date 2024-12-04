@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import EventCard from '../components/store/EventCard';
 import StyledPaper from '../components/StyledPaper';
-import { Container, Paper, Typography } from '@mui/material';
+import { Container, Paper, Typography, Box, Zoom } from '@mui/material';
 import { fetchEvents, getEventById } from '../services/eventApi';
 import { Event } from '../types/Event';
 import EventDetails from '../components/store/EventDetails';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import { Box, styled } from '@mui/system';
+import { styled } from '@mui/system';
 
 const Store = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -22,7 +22,7 @@ const Store = () => {
 
   useEffect(() => {
     getTickets();
-  }, []);
+  }, [searchQuery]);
 
   const getTickets = async () => {
     try {
@@ -45,9 +45,9 @@ const Store = () => {
       if (!event.id) {
         throw new Error('Event ID not found');
       } else {
-      const eventDetails = await getEventById(event.id);
-      setSelectedEvent(eventDetails);
-      setDialogOpen(true);
+        const eventDetails = await getEventById(event.id);
+        setSelectedEvent(eventDetails);
+        setDialogOpen(true);
       }
     } catch (error) {
       console.error('Error fetching event details:', error);
@@ -103,8 +103,12 @@ const Store = () => {
                 <SpinningIcon sx={{ color: 'primary.main', fontSize: 100 }} />
               </Box>
             ) : (
-              filteredEvents.map(event => (
-                <EventCard key={event.id} event={event} onClick={() => handleCardClick(event)} />
+              filteredEvents.map((event, index) => (
+                <Zoom in={true} key={event.id} style={{ transitionDelay: `${index * 100}ms` }}>
+                  <Box>
+                    <EventCard event={event} onClick={() => handleCardClick(event)} />
+                  </Box>
+                </Zoom>
               ))
             )}
           </Container>
