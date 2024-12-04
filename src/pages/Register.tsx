@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Typography, Box, Alert, Paper, FormControlLabel, Switch } from '@mui/material';
+import { TextField, Button, Typography, Box, Alert, Paper, FormControlLabel, Switch, CircularProgress } from '@mui/material';
 import Navbar from '../components/Navbar';
 import { register } from '../services/sessionApi';
 
@@ -14,10 +14,12 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('customers');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true);
     try {
       await register(name, email, password, userType);
       onRegisterSuccess();
@@ -28,6 +30,8 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       } else {
         setError('Registration failed');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,13 +101,15 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
           >
-            Register
+            {loading ? <CircularProgress size={24} /> : 'Register'}
           </Button>
           <Button
             fullWidth
             variant="outlined"
             onClick={() => navigate('/login')}
+            disabled={loading}
           >
             Login
           </Button>
