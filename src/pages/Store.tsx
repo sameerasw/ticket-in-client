@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import EventCard from '../components/store/EventCard';
 import StyledPaper from '../components/StyledPaper';
-import { Container, Paper, Typography } from '@mui/material';
-import { fetchEvents } from '../services/eventApi';
+import { Container, Paper, Typography, Box, Zoom } from '@mui/material';
+import { fetchEvents, getEventById } from '../services/eventApi';
 import { Event } from '../types/Event';
 import EventDetails from '../components/store/EventDetails';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import { Box, styled } from '@mui/system';
+import { styled } from '@mui/system';
 
 const Store = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -15,36 +15,51 @@ const Store = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [eventLoading, setEventLoading] = useState<boolean>(false);
   const userName = localStorage.getItem('userName');
   const token = localStorage.getItem('authToken');
+  const customerId = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
 
   useEffect(() => {
-    const getTickets = async () => {
-      try {
-        const data = await fetchEvents();
-        setEvents(data);
-      } catch (error) {
-        console.error('Error fetching tickets:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getTickets();
-  }, []);
+  }, [searchQuery]);
+
+  const getTickets = async () => {
+    try {
+      const data = await fetchEvents();
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const handleCardClick = (event: Event) => {
-    setSelectedEvent(event);
-    setDialogOpen(true);
+  const handleCardClick = async (event: Event) => {
+    setEventLoading(true);
+    try {
+      if (!event.id) {
+        throw new Error('Event ID not found');
+      } else {
+        const eventDetails = await getEventById(event.id);
+        setSelectedEvent(eventDetails);
+        setDialogOpen(true);
+      }
+    } catch (error) {
+      console.error('Error fetching event details:', error);
+    } finally {
+      setEventLoading(false);
+    }
   };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedEvent(null);
+    getTickets();
   };
 
   const filteredEvents = events.filter(event =>
@@ -71,7 +86,7 @@ const Store = () => {
     }}>
       <Navbar onSearch={handleSearch} />
       <StyledPaper>
-        <Container sx={{ marginTop: '3rem', width: '100%' }}>
+        <Container sx={{ paddingTop: '5rem', width: '100%' }}>
           {token && (
             <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
               Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
@@ -88,14 +103,18 @@ const Store = () => {
                 <SpinningIcon sx={{ color: 'primary.main', fontSize: 100 }} />
               </Box>
             ) : (
-              filteredEvents.map(event => (
-                <EventCard key={event.id} event={event} onClick={() => handleCardClick(event)} />
+              filteredEvents.map((event, index) => (
+                <Zoom in={true} key={event.id} style={{ transitionDelay: `${index * 100}ms` }}>
+                  <Box>
+                    <EventCard event={event} onClick={() => handleCardClick(event)} />
+                  </Box>
+                </Zoom>
               ))
             )}
           </Container>
         </Container>
       </StyledPaper>
-      <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} isSignedIn={!!token} />
+      <EventDetails open={dialogOpen} onClose={handleDialogClose} event={selectedEvent} isSignedIn={!!token} customerId={customerId} loading={eventLoading} />
     </Paper>
   );
 };

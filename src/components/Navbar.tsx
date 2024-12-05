@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import { alpha, Button, Checkbox, InputBase, styled } from '@mui/material';
+import { alpha, Checkbox, InputBase, styled } from '@mui/material';
 import Brightness5RoundedIcon from '@mui/icons-material/Brightness5Rounded';
 import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
 import { useThemeContext } from './ThemeContext';
@@ -22,9 +21,11 @@ interface NavbarProps {
 
 export default function Navbar({ onSearch }: NavbarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const { toggleTheme, theme } = useThemeContext();
   const token = localStorage.getItem('authToken');
   const userName = localStorage.getItem('userName');
+  const userType = localStorage.getItem('userType');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,16 +39,30 @@ export default function Navbar({ onSearch }: NavbarProps) {
     setAnchorEl(null);
   };
 
+  const handleProfileClick = () => {
+    handleClose();
+    if (userType === 'CUSTOMER') {
+      navigate('/profile');
+    }
+  };
+
   const isDarkMode = theme.palette.mode === 'dark';
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onSearch(event.target.value);
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onSearch(searchQuery);
+    }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // Remove token from local storage
-    localStorage.removeItem('userName'); // Remove user name from local storage
-    window.location.reload(); // Refresh page
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userType');
+    window.location.reload();
   };
 
   const handleLoginClick = () => {
@@ -60,7 +75,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
     navigate('/register');
   };
 
-  const Search = styled('div')(({ theme }) => ({
+  const Search = useCallback(styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     border: '1px solid',
@@ -75,34 +90,34 @@ export default function Navbar({ onSearch }: NavbarProps) {
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
-  }));
+  })), []);
 
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
+  const SearchIconWrapper = useCallback(styled('div')(({ theme }) => ({
+    padding: theme.spacing(1),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }));
+  })), []);
 
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  const StyledInputBase = useCallback(styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     width: '100%',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      paddingLeft: `calc(1em + ${theme.spacing(3)})`,
       transition: theme.transitions.create('width'),
+      height: '1em',
       [theme.breakpoints.up('sm')]: {
         width: '12ch',
         '&:focus': {
-          width: '20ch',
+          width: '25ch',
         },
       },
     },
-  }));
+  })), []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -114,15 +129,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
         boxShadow: 0,
       }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Box onClick={() => navigate('/')} sx={{
             display: 'flex',
             alignItems: 'center',
@@ -159,7 +165,9 @@ export default function Navbar({ onSearch }: NavbarProps) {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
+                value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
               />
             </Search>
           )}
@@ -203,7 +211,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 onClose={handleClose}
               >
                 {token && [
-                    <MenuItem key="username" onClick={handleClose}>{userName}</MenuItem>,
+                    <MenuItem key="username" onClick={handleProfileClick}>{userName}</MenuItem>,
                     <MenuItem key="logout" onClick={handleLogout}>Logout</MenuItem>
                 ]}
                 {!token && [
