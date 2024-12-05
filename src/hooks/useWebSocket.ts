@@ -1,0 +1,25 @@
+import { useState, useEffect } from 'react';
+
+export const useWebSocket = (eventId: number | null) => {
+    const [purchases, setPurchases] = useState<string[]>([]);
+    const [availableTickets, setAvailableTickets] = useState<number>(0);
+    const [socket, setSocket] = useState<WebSocket | null>(null);
+
+    useEffect(() => {
+        if (eventId) {
+            const wsPurchases = new WebSocket(`ws://localhost:8081/ws/event/${eventId}/purchases`);
+            wsPurchases.onmessage = (event) => {
+                const timestamp = new Date().toLocaleTimeString();
+                setPurchases((prevPurchases) => [...prevPurchases, `${timestamp} - ${event.data}`]);
+            };
+            setSocket(wsPurchases);
+
+            const wsTickets = new WebSocket(`ws://localhost:8081/ws/event/${eventId}/tickets`);
+            wsTickets.onmessage = (event) => {
+                setAvailableTickets(parseInt(event.data.split(': ')[1]));
+            };
+        }
+    }, [eventId]);
+
+    return { purchases, availableTickets, socket };
+};
