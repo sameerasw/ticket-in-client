@@ -14,6 +14,7 @@ import { alpha, Box, Grow, CircularProgress } from '@mui/material';
 import ConfirmationNumberRoundedIcon from '@mui/icons-material/ConfirmationNumberRounded';
 import BookmarkAddRoundedIcon from '@mui/icons-material/BookmarkAddRounded';
 import { purchaseTicket } from '../../services/customerApi';
+import { useWebSocket } from '../../hooks/useWebSocket';
 
 interface EventDetailsProps {
     open: boolean;
@@ -38,6 +39,8 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [purchaseSuccess, setPurchaseSuccess] = useState<boolean>(false);
     const [purchaseLoading, setPurchaseLoading] = useState<boolean>(false);
+
+    const { availableTickets } = useWebSocket(event?.id || null);
 
     const buyTicket = async () => {
         if (customerId && event?.id) {
@@ -153,7 +156,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                                 By: {event?.vendorName}
                             </DialogContentText>
                             <DialogContentText>
-                                Available Tickets: {event?.availableTickets}
+                                Available Tickets: {availableTickets}
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions sx={{
@@ -174,9 +177,9 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                                         variant="contained" 
                                         endIcon={<ConfirmationNumberRoundedIcon />} 
                                         onClick={buyTicket} 
-                                        disabled={event?.availableTickets === 0 || purchaseLoading}
+                                        disabled={availableTickets === 0 || purchaseLoading}
                                     >
-                                        {purchaseLoading ? <CircularProgress size={24} /> :(event?.availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
+                                        {purchaseLoading ? <CircularProgress size={24} /> :(availableTickets === 0 ? 'Out of stock, Check back later' : `Buy Ticket $${event?.ticketPrice}`)}
                                     </Button>
                                 </>
                             ) : (
