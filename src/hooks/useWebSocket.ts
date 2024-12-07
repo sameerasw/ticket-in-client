@@ -12,11 +12,17 @@ export const useWebSocket = (eventId: number | null) => {
                 const timestamp = new Date().toLocaleTimeString();
                 setPurchases((prevPurchases) => [...prevPurchases, `${timestamp} - ${event.data}`]);
             };
-            setSocket(wsPurchases);
 
             const wsTickets = new WebSocket(`ws://localhost:8081/ws/event/${eventId}/tickets`);
             wsTickets.onmessage = (event) => {
                 setAvailableTickets(parseInt(event.data.split(': ')[1]));
+            };
+
+            setSocket(wsPurchases);
+
+            return () => {
+                wsPurchases.close();
+                wsTickets.close();
             };
         }
     }, [eventId]);
