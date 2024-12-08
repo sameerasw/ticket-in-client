@@ -38,7 +38,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, vendorI
     const [ticketCount, setTicketCount] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const { purchases, availableTickets, socket } = useWebSocket(event?.id || null);
+    const { purchases, availableTickets, socket, resetPurchases } = useWebSocket(event?.id || null);
 
     const handleReleaseTickets = async () => {
         if (event && ticketCount > 0 && event.id) {
@@ -57,6 +57,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, vendorI
     };
 
     const handleDialogClose = () => {
+        setTicketCount(0);
+        resetPurchases();
         onClose();
     };
 
