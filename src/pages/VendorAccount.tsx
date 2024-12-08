@@ -51,14 +51,13 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
   const handleSaveEvent = async (event: Event) => {
     try {
       if (event.id) {
-        // Update existing event (WIP)
         console.log('Event updated:', event);
       } else {
         // Create new event
         const newEvent = await createEvent(event);
         console.log('Event created:', newEvent);
       }
-      await fetchVendorEvents(); // Re-fetch events after saving
+      await fetchVendorEvents();
     } catch (error) {
       console.error('Error saving event:', error);
     } finally {
@@ -70,11 +69,11 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
     <>
       <Navbar onSearch={() => { }} />
       <StyledPaper>
-        <Container sx={{ paddingTop: '3rem', height: '100vh' }}>
-          <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
+        <Container sx={{ paddingY: '3rem', height: '100vh' }}>
+          <Typography variant="h5" sx={{ textAlign: 'center', marginY: '3rem' }}>
             Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
           </Typography>
-          <Card variant='outlined' sx={{ padding: '1rem' }}>
+          <Card variant='outlined' sx={{ padding: '1rem', marginBottom: '2rem' }}>
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingX: '1rem' }}>
               <Typography variant="h6" sx={{ textAlign: 'left', flexGrow: 1 }}>
                 Event Management
@@ -102,14 +101,13 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
           </Card>
         </Container>
       </StyledPaper>
-      <EventEditor 
-        open={dialogOpen} 
-        onClose={handleDialogClose} 
-        event={selectedEvent} 
-        onSave={handleSaveEvent} 
-        vendorId={userId} 
-        vendorName={userName} 
-        fetchVendorEvents={fetchVendorEvents} // Pass the fetch function as a prop
+      <EventEditor
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        event={selectedEvent}
+        vendorId={userId}
+        vendorName={userName}
+        fetchVendorEvents={fetchVendorEvents}
       />
     </>
   );
