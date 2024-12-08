@@ -115,20 +115,23 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, vendorI
                             <Typography variant="h6" sx={{ textAlign: 'center', marginY: '2rem' }}>
                                 Real-Time Ticket Purchases Log
                             </Typography>
-                            <Box sx={{ overflowY: 'scroll', height: '60vh', padding: '1rem' }}>
-                                {purchases.map((purchase, index) => (
-                                    <Card key={index} sx={{ marginBottom: '1rem', padding: '1rem' }}>
-                                        🎫 {purchase}
+                            <Box sx={{ marginTop: 4 }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', height: '60vh', padding: '1rem' }}>
+                                    <Box sx={{ overflowY: 'auto', flexGrow: 1 }}>
+                                        {purchases.slice().reverse().map((purchase, index) => (
+                                            <Card key={index} sx={{ marginBottom: '1rem', padding: '1rem' }}>
+                                                {purchase.includes('purchased') ? '🎫' : '🎟️'} {purchase}
+                                            </Card>
+                                        ))}
+                                    </Box>
+                                    <Card sx={{
+                                        marginTop: 'auto',
+                                        padding: '1rem',
+                                        backgroundColor: 'background.default',
+                                    }} variant='outlined'>
+                                        Connection : {socket?.readyState === WebSocket.OPEN ? '🟢' : '🔴'} Logs will be displayed here in real-time.
                                     </Card>
-                                ))}
-                                <Card sx={{
-                                    marginBottom: '1rem',
-                                    padding: '1rem',
-                                    flexGrow: 1,
-                                    backgroundColor: 'background.default',
-                                }} variant='outlined'>
-                                    Connection status: {socket?.readyState === WebSocket.OPEN ? '🟢' : '🔴'} Ticket purchasing information will be displayed here in real-time.
-                                </Card>
+                                </Box>
                             </Box>
                         </Box>
                     </>
