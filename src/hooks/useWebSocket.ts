@@ -27,5 +27,9 @@ export const useWebSocket = (eventId: number | null) => {
         }
     }, [eventId]);
 
-    return { purchases, availableTickets, socket };
+    const resetPurchases = () => {
+        setPurchases([]);
+    };
+
+    return { purchases, availableTickets, socket, resetPurchases };
 };

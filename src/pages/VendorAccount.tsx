@@ -51,7 +51,6 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
   const handleSaveEvent = async (event: Event) => {
     try {
       if (event.id) {
-        // Update existing event (WIP)
         console.log('Event updated:', event);
       } else {
         // Create new event
@@ -70,7 +69,7 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
     <>
       <Navbar onSearch={() => { }} />
       <StyledPaper>
-        <Container sx={{ paddingY: '3rem' }}>
+        <Container sx={{ paddingY: '3rem', height: '100vh' }}>
           <Typography variant="h5" sx={{ textAlign: 'center', marginY: '3rem' }}>
             Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
           </Typography>
