@@ -115,6 +115,13 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, vendorI
                             <Typography variant="h6" sx={{ textAlign: 'center', marginY: '2rem' }}>
                                 Real-Time Ticket Purchases Log
                             </Typography>
+                                    <Card sx={{
+                                        marginTop: 'auto',
+                                        padding: '1rem',
+                                        backgroundColor: 'background.default',
+                                    }} variant='outlined'>
+                                        Connection : {socket?.readyState === WebSocket.OPEN ? '🟢' : '🔴'} Logs will be displayed here in real-time.
+                                    </Card>
                             <Box sx={{ marginTop: 4 }}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', height: '60vh', padding: '1rem' }}>
                                     <Box sx={{ overflowY: 'auto', flexGrow: 1 }}>
@@ -124,13 +131,6 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, vendorI
                                             </Card>
                                         ))}
                                     </Box>
-                                    <Card sx={{
-                                        marginTop: 'auto',
-                                        padding: '1rem',
-                                        backgroundColor: 'background.default',
-                                    }} variant='outlined'>
-                                        Connection : {socket?.readyState === WebSocket.OPEN ? '🟢' : '🔴'} Logs will be displayed here in real-time.
-                                    </Card>
                                 </Box>
                             </Box>
                         </Box>
