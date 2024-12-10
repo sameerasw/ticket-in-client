@@ -5,6 +5,7 @@ import { TicketDTO } from '../types/Ticket';
 const API_URL = `${config.API_BASE_URL}/customers`;
 
 export const purchaseTicket = async (customerId: number, eventItemId: number): Promise<string> => {
+  // POST /customers/{customerId}/buy/{eventItemId}
   try {
     const response = await axios.get(`${API_URL}/${customerId}/buy/${eventItemId}`);
     return response.data;
@@ -15,6 +16,7 @@ export const purchaseTicket = async (customerId: number, eventItemId: number): P
 };
 
 export const getCustomerTickets = async (customerId: number): Promise<TicketDTO[]> => {
+  // GET /customers/{customerId}/tickets
   try {
     const response = await axios.get(`${API_URL}/${customerId}/tickets`);
     return response.data;

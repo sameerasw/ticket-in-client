@@ -18,7 +18,6 @@ const PrivateRoute = ({ element, token }: PrivateRouteProps) => {
 
 const AppRoutes = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'));
-  const [userName, setUserName] = useState<string | null>(localStorage.getItem('userName'));
   const [userId, setUserId] = useState<number | null>(parseInt(localStorage.getItem('userId') || '0'));
   const [name, setName] = useState<string | null>(localStorage.getItem('userName'));
   const [email, setEmail] = useState<string | null>(localStorage.getItem('userEmail'));

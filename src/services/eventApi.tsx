@@ -5,6 +5,7 @@ import config from '../config';
 const API_URL = `${config.API_BASE_URL}/events`;
 
 export const fetchEvents = async (): Promise<Event[]> => {
+  // GET /events/list
   try {
     const response = await axios.get(`${API_URL}/list`);
     return response.data;
@@ -15,6 +16,7 @@ export const fetchEvents = async (): Promise<Event[]> => {
 };
 
 export const createEvent = async (event: Event): Promise<Event> => {
+  // POST /events
   try {
     const response = await axios.post(API_URL, event);
     return response.data;
@@ -25,6 +27,7 @@ export const createEvent = async (event: Event): Promise<Event> => {
 };
 
 export const fetchEventsByVendor = async (vendorId: number): Promise<Event[]> => {
+  // GET /events/{vendorId}/list
   try {
     const response = await axios.get(`${API_URL}/${vendorId}/list`);
     return response.data;
@@ -35,6 +38,7 @@ export const fetchEventsByVendor = async (vendorId: number): Promise<Event[]> =>
 };
 
 export const getEventById = async (eventId: number): Promise<Event> => {
+  // GET /events/{eventId}
   try {
     const response = await axios.get(`${API_URL}/${eventId}`);
     return response.data;
