@@ -117,7 +117,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ open, onClose, event, vendorI
                             </Typography>
                                     <Card sx={{
                                         marginTop: 'auto',
-                                        padding: '1rem',
+                                        padding: '1rem 2rem',
                                         backgroundColor: 'background.default',
                                     }} variant='outlined'>
                                         Connection : {socket?.readyState === WebSocket.OPEN ? '🟢' : '🔴'} Logs will be displayed here in real-time.
