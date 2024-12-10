@@ -106,6 +106,7 @@ const VendorAccount: React.FC<VendorAccountProps> = ({ userId, userName }) => {
         onClose={handleDialogClose}
         event={selectedEvent}
         vendorId={userId}
+        onSave={handleSaveEvent}
         vendorName={userName}
         fetchVendorEvents={fetchVendorEvents}
       />
