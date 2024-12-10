@@ -12,7 +12,6 @@ import { Event } from '../../types/Event';
 import { TransitionProps } from '@mui/material/transitions';
 import { alpha, Box, Grow, CircularProgress } from '@mui/material';
 import ConfirmationNumberRoundedIcon from '@mui/icons-material/ConfirmationNumberRounded';
-import BookmarkAddRoundedIcon from '@mui/icons-material/BookmarkAddRounded';
 import { purchaseTicket } from '../../services/customerApi';
 import { useWebSocket } from '../../hooks/useWebSocket';
 
