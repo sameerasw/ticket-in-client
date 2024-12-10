@@ -170,9 +170,9 @@ const EventDetails: React.FC<EventDetailsProps> = ({ open, onClose, event, isSig
                             </Button>
                             {isSignedIn ? (
                                 <>
-                                    <Button variant="outlined" endIcon={<BookmarkAddRoundedIcon />}>
+                                    {/* <Button variant="outlined" endIcon={<BookmarkAddRoundedIcon />}>
                                         Watchlist
-                                    </Button>
+                                    </Button> */}
                                     <Button 
                                         variant="contained" 
                                         endIcon={<ConfirmationNumberRoundedIcon />} 
