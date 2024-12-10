@@ -60,7 +60,7 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({ userId, userName }) =
     <div>
       <Navbar onSearch={() => { }} />
       <StyledPaper>
-        <Container sx={{ paddingTop: '3rem', height: '100vh' }}>
+        <Container sx={{ paddingY: '3rem', minHeight: '100vh' }}>
           <Typography variant="h5" sx={{ textAlign: 'center', marginY: '2rem' }}>
             Welcome, <span style={{ color: 'primary.main' }}>{userName}</span>
           </Typography>

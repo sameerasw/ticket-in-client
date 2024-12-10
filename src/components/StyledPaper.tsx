@@ -9,7 +9,8 @@ const StyledPaper: React.FC<StyledPaperProps> = ({ children }) => {
     return (
         <Paper 
         sx={{ 
-            minHeight: "fill-available",
+            minHeight: "100vh",
+            height: "fit-content",
             width: "fill-available",
             margin: "0",
             borderRadius: "0",
