@@ -7,7 +7,6 @@ This project is the front-end for the Ticket-In application, a ticket booking sy
 - [Description](#description)
 - [Setup Guide](#setup-guide)
 - [Available Scripts](#available-scripts)
-- [API Documentation](#api-documentation)
 - [Learn More](#learn-more)
 
 ## Description
@@ -99,7 +98,7 @@ export default config;
 
 ### Endpoints
 
-WIP
+Refer the attacked document's API Documentation section.
 
 ## Learn More
 
